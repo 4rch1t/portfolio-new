@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ARCHIT | SWE &amp; AIML</title>
+<link rel="icon" type="image/png" href="assets/images/favicon.png"/>
+<link rel="shortcut icon" type="image/png" href="assets/images/favicon.png"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FF3D00",
+                        "on-primary": "#000000",
+                        "surface": "#000000",
+                        "surface-container": "#1A1A1A",
+                        "on-surface": "#FFFFFF",
+                        "outline": "#FFFFFF",
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-huge {
+            font-size: clamp(5rem, 20vw, 25rem);
+            line-height: 0.8;
+        }
+        .vertical-text {
+            writing-mode: vertical-rl;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Animation Classes */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-up.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-scale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .parallax-hero {
+            will-change: transform;
+        }
+
+        /* Hero Reveal */
+        @keyframes heroReveal {
+            0% { clip-path: inset(100% 0 0 0); transform: translateY(10%); }
+            100% { clip-path: inset(0 0 0 0); transform: translateY(0); }
+        }
+        .animate-hero {
+            animation: heroReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Staggered Reveal Delays */
+        .stagger-item:nth-child(1) { transition-delay: 0.1s; }
+        .stagger-item:nth-child(2) { transition-delay: 0.2s; }
+        .stagger-item:nth-child(3) { transition-delay: 0.3s; }
+        .stagger-item:nth-child(4) { transition-delay: 0.4s; }
+        .stagger-item:nth-child(5) { transition-delay: 0.5s; }
+        .stagger-item:nth-child(6) { transition-delay: 0.6s; }
+
+        /* Reveal from Left */
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Reveal from Right */
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Text shimmer on hero */
+        @keyframes textShimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        .text-shimmer {
+            background: linear-gradient(90deg, #fff 0%, #FF3D00 50%, #fff 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShimmer 4s linear infinite;
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Header shrink on scroll */
+        header.scrolled {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.85);
+        }
+        header {
+            transition: padding 0.3s ease, background 0.3s ease, backdrop-filter 0.3s ease;
+        }
+
+        /* Mobile menu overlay */
+        .mobile-menu {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            background: rgba(0, 0, 0, 0.97);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mobile-menu.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .mobile-menu a {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            color: white;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .mobile-menu a:hover {
+            color: #FF3D00;
+            transform: translateX(10px);
+        }
+
+        /* Active nav link */
+        .nav-link {
+            position: relative;
+            transition: color 0.2s, background-color 0.2s;
+        }
+        .nav-link.active-link {
+            color: #FF3D00 !important;
+        }
+        .nav-link.active-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #FF3D00;
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 50;
+            width: 48px;
+            height: 48px;
+            background: #FF3D00;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s, background 0.2s;
+            pointer-events: none;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .back-to-top:hover {
+            background: white;
+        }
+
+        /* Magnetic button effect */
+        .magnetic-btn {
+            transition: transform 0.2s ease-out;
+        }
+
+        /* Floating project preview card */
+        #project-preview {
+            position: fixed;
+            top: 0; left: 0;
+            width: 300px;
+            pointer-events: none;
+            z-index: 9990;
+            opacity: 0;
+            transform: translateY(10px) scale(0.97);
+            transition: opacity 0.22s cubic-bezier(0.16,1,0.3,1),
+                        transform 0.22s cubic-bezier(0.16,1,0.3,1);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-top: 2px solid #FF3D00;
+            background: #0a0a0a;
+        }
+        #project-preview.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        #project-preview .preview-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+        #project-preview .preview-body {
+            padding: 16px 18px 18px;
+        }
+        #project-preview .preview-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        #project-preview .preview-desc {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 14px;
+        }
+        #project-preview .preview-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        #project-preview .preview-tag {
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #FF3D00;
+            border: 1px solid rgba(255,61,0,0.3);
+            padding: 3px 8px;
+        }
+        @media (hover: none) { #project-preview { display: none; } }
+
+        /* Project row line sweep */
+        .project-row::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #FF3D00;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .project-row:hover::before {
+            width: 100%;
+        }
+
+        /* ===== ENHANCED SCROLL ANIMATIONS ===== */
+
+        /* Scroll progress bar */
+        #scroll-progress {
+            position: fixed;
+            top: 0; left: 0;
+            height: 2px;
+            background: #FF3D00;
+            z-index: 9999;
+            width: 0%;
+            pointer-events: none;
+        }
+
+        /* Custom cursor */
+        #cursor-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 99999;
+        }
+        @media (hover: none) { #cursor-canvas { display: none; } }
+
+        /* Marquee */
+        @keyframes marquee-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        @keyframes marquee-right {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+        .marquee-track { animation: marquee-left 26s linear infinite; }
+        .marquee-track-rev { animation: marquee-right 32s linear infinite; }
+        .marquee-wrap:hover .marquee-track,
+        .marquee-wrap:hover .marquee-track-rev { animation-play-state: paused; }
+
+        /* Word-by-word reveal */
+        .word-box {
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: bottom;
+        }
+        .word-inner {
+            display: inline-block;
+            transform: translateY(110%);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .split-ready.active .word-inner { transform: translateY(0); }
+
+        /* Section label line-draw */
+        .label-line {
+            display: inline-flex !important;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .label-line::before {
+            content: '';
+            display: block;
+            height: 1px;
+            width: 0;
+            background: #FF3D00;
+            flex-shrink: 0;
+            transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
+        }
+        .label-line.active::before { width: 22px; }
+
+        /* Reveal float (scale + rise) */
+        .reveal-float {
+            opacity: 0;
+            transform: translateY(60px) scale(0.97);
+            transition: opacity 1s cubic-bezier(0.16,1,0.3,1),
+                        transform 1s cubic-bezier(0.16,1,0.3,1);
+        }
+        .reveal-float.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-body selection:bg-primary selection:text-black overflow-x-hidden">
+<!-- Scroll Progress Bar -->
+<div id="scroll-progress"></div>
+<!-- Custom Cursor Canvas -->
+<canvas id="cursor-canvas"></canvas>
+<!-- Floating Project Preview -->
+<div id="project-preview">
+    <img id="preview-img" class="preview-img" src="" alt=""/>
+    <div class="preview-body">
+        <div id="preview-name" class="preview-name"></div>
+        <p id="preview-desc" class="preview-desc"></p>
+        <div id="preview-tags" class="preview-tags"></div>
+    </div>
+</div>
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu" id="mobile-menu">
+<button class="absolute top-6 right-6 text-white" id="menu-close">
+<span class="material-symbols-outlined text-4xl">close</span>
+</button>
+<a href="#work" class="mobile-nav-link">WORK</a>
+<a href="#experience" class="mobile-nav-link">EXPERIENCE</a>
+<a href="#expertise" class="mobile-nav-link">EXPERTISE</a>
+<a href="#cta" class="mobile-nav-link">ABOUT</a>
+<a href="#cta" class="mobile-nav-link text-[#FF3D00]">CONNECT</a>
+</div>
+
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex items-center justify-between px-8 py-4 bg-black/90 backdrop-blur-md border-b border-white/10" id="site-header">
+<!-- Logo -->
+<a href="#hero" class="text-[#FF3D00] font-black text-xl tracking-tighter uppercase font-['Space_Grotesk'] cursor-pointer flex-shrink-0">ARCHIT</a>
+<!-- Centered Nav -->
+<nav class="hidden md:flex absolute left-1/2 -translate-x-1/2 gap-10">
+<a class="nav-link text-white/70 hover:text-white transition-colors duration-200 font-['Inter'] uppercase tracking-[0.15rem] text-[11px]" href="#work">WORK</a>
+<a class="nav-link text-white/70 hover:text-white transition-colors duration-200 font-['Inter'] uppercase tracking-[0.15rem] text-[11px]" href="#experience">EXPERIENCE</a>
+<a class="nav-link text-white/70 hover:text-white transition-colors duration-200 font-['Inter'] uppercase tracking-[0.15rem] text-[11px]" href="#expertise">EXPERTISE</a>
+<a class="nav-link text-white/70 hover:text-white transition-colors duration-200 font-['Inter'] uppercase tracking-[0.15rem] text-[11px]" href="#cta">ABOUT</a>
+</nav>
+<!-- Right: CTA + Mobile menu -->
+<div class="flex items-center gap-4 flex-shrink-0">
+<a href="#cta" class="hidden md:block border border-white/30 px-5 py-2 text-white/80 font-['Inter'] uppercase tracking-[0.15rem] text-[11px] rounded-full hover:border-primary hover:text-primary transition-all duration-200 magnetic-btn">CONNECT</a>
+<button class="md:hidden" id="menu-open">
+<span class="material-symbols-outlined text-white cursor-pointer text-2xl">menu</span>
+</button>
+</div>
+</header>
+<main class="pt-20">
+<!-- Hero Section -->
+<section id="hero" class="min-h-screen flex flex-col justify-between px-6 py-12 relative overflow-hidden">
+<!-- Profile image — full background -->
+<div class="absolute inset-0 pointer-events-none select-none">
+<img src="assets/images/profile.png" alt="Archit Kumar Sahoo" class="w-full h-full object-cover object-top"/>
+<div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80"></div>
+</div>
+<div class="pt-12 flex items-start justify-between reveal-up active relative z-10">
+<span class="font-label uppercase tracking-[0.3rem] text-white text-sm font-bold">WEBDEV &amp; AIML</span>
+</div>
+<div class="w-full overflow-hidden relative z-10">
+<h1 class="text-huge font-headline font-black uppercase tracking-tighter leading-none text-center md:text-left select-none animate-hero parallax-hero text-white" id="hero-title">
+                ARCHIT
+            </h1>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 border-t border-white pt-6 mt-12 gap-6 reveal-up active relative z-10" style="transition-delay: 0.5s;">
+<div class="font-label uppercase tracking-[0.15rem] text-xs text-white/60">BASED IN CHENNAI, INDIA</div>
+<div class="font-label uppercase tracking-[0.15rem] text-xs text-white/60 text-center">SPECIALIZING IN AI, FULL-STACK &amp; ML</div>
+<div class="font-label uppercase tracking-[0.15rem] text-xs text-white/60 text-right">SRM IST — B.TECH AI</div>
+</div>
+</section>
+<!-- Experience Section -->
+<section id="experience" class="bg-black py-24 px-6 border-t border-white">
+<div class="grid grid-cols-12 gap-6">
+<div class="col-span-12 md:col-span-3 mb-12 md:mb-0">
+<div class="sticky top-32 reveal-up">
+<span class="font-label uppercase tracking-[0.2rem] text-primary block label-line">EXPERIENCE</span>
+<span class="text-xs text-white/40 block mt-1 font-light">経験</span>
+</div>
+</div>
+<div class="col-span-12 md:col-span-9">
+<h2 class="font-headline text-4xl md:text-7xl font-black uppercase tracking-tighter mb-20 leading-tight reveal-up">
+                    Still Learning <br/> BUILDING IN PRODUCTION
+                </h2>
+<div class="border-t border-white">
+<!-- Cherry+ Network -->
+<div class="reveal-up py-10 px-4 border-b border-white">
+<div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+<div>
+<h3 class="font-headline text-2xl md:text-4xl font-black uppercase tracking-tighter">Cherry+ Network</h3>
+<p class="text-primary font-label uppercase tracking-[0.15rem] text-xs mt-2">Software Engineering Intern</p>
+</div>
+<span class="font-label text-white/40 text-xs uppercase tracking-[0.15rem] whitespace-nowrap reveal-up">Aug 2025 — Present</span>
+</div>
+<p class="text-white/60 font-body text-sm leading-relaxed max-w-2xl mb-6">
+                            Maintaining and enhancing 3 production web apps built on React, TypeScript &amp; Supabase — serving 2,000–3,000 active users. Shipping feature updates, fixing bugs, and optimizing performance on live codebases alongside senior engineers on large-scale deployment pipelines.
+                        </p>
+<div class="flex gap-3 flex-wrap">
+<span class="border border-white/20 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-white/50">React</span>
+<span class="border border-white/20 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-white/50">TypeScript</span>
+<span class="border border-white/20 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-white/50">Supabase</span>
+<span class="border border-white/20 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-white/50">Production Apps</span>
+</div>
+</div>
+<!-- Liftoff -->
+<div class="reveal-up py-10 px-4 border-b border-white">
+<div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+<div>
+<h3 class="font-headline text-2xl md:text-4xl font-black uppercase tracking-tighter">Liftoff</h3>
+<p class="text-primary font-label uppercase tracking-[0.15rem] text-xs mt-2">Technical Lead</p>
+</div>
+<span class="font-label text-white/40 text-xs uppercase tracking-[0.15rem] whitespace-nowrap reveal-up">Jan 2025 — Feb 2026</span>
+</div>
+<p class="text-white/60 font-body text-sm leading-relaxed max-w-2xl mb-6">
+                            Mentoring 100+ junior developers in MERN stack development — overseeing Git repos, conducting code reviews, and coordinating delivery across multiple real-world projects. Established structured engineering workflows and led teams through hackathons and competitions.
+                        </p>
+<div class="flex gap-3 flex-wrap">
+<span class="border border-white/20 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-white/50">MERN Stack</span>
+<span class="border border-white/20 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-white/50">Team Leadership</span>
+<span class="border border-white/20 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-white/50">Code Review</span>
+<span class="border border-white/20 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-white/50">Mentorship</span>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Work Section -->
+<section class="bg-black py-24 px-6 border-t border-white" id="work">
+<div class="grid grid-cols-12 gap-6">
+<div class="col-span-12 md:col-span-3 mb-12 md:mb-0">
+<div class="sticky top-32 reveal-up">
+<span class="font-label uppercase tracking-[0.2rem] text-primary block label-line">FEATURED WORK</span>
+<span class="text-xs text-white/40 block mt-1 font-light">注目の作品</span>
+</div>
+</div>
+<div class="col-span-12 md:col-span-9">
+<h2 class="font-headline text-4xl md:text-7xl font-black uppercase tracking-tighter mb-20 leading-tight reveal-up">
+                    REAL PROJECTS. SHIPPED <br/> END-TO-END, BUILT SOLO.
+                </h2>
+<div class="border-t border-white">
+<!-- Project Rows with staggered reveal -->
+<a href="https://github.com/4rch1t/CollabXATMP3" target="_blank" rel="noopener noreferrer"
+   class="reveal-up stagger-item project-row group relative flex justify-between items-center py-10 px-4 border-b border-white hover:bg-primary transition-colors duration-300 cursor-pointer"
+   data-preview-img="assets/images/collabx.png"
+   data-preview-name="CollabX"
+   data-preview-desc="Real-time collaboration platform with chat, task boards &amp; file rooms. Built end-to-end with MERN + Socket.io."
+   data-preview-tags="React,Socket.io,MongoDB,Node.js">
+<div class="flex items-baseline gap-8">
+<span class="font-headline text-2xl md:text-4xl font-bold text-white/30 group-hover:text-black">01</span>
+<h3 class="font-headline text-3xl md:text-6xl font-black uppercase tracking-tighter group-hover:text-black">CollabX</h3>
+</div>
+<span class="material-symbols-outlined text-4xl group-hover:text-black transition-transform group-hover:rotate-45">north_east</span>
+</a>
+<a href="https://github.com/4rch1t/PixelGuard_AI" target="_blank" rel="noopener noreferrer"
+   class="reveal-up stagger-item project-row group relative flex justify-between items-center py-10 px-4 border-b border-white hover:bg-primary transition-colors duration-300 cursor-pointer"
+   data-preview-img="assets/images/pixelguard.png"
+   data-preview-name="PixelGuardAI"
+   data-preview-desc="Deep learning forgery detector using ResNet-50 + Grad-CAM heatmaps to localize tampered image regions."
+   data-preview-tags="PyTorch,ResNet-50,Grad-CAM,Python">
+<div class="flex items-baseline gap-8">
+<span class="font-headline text-2xl md:text-4xl font-bold text-white/30 group-hover:text-black">02</span>
+<h3 class="font-headline text-3xl md:text-6xl font-black uppercase tracking-tighter group-hover:text-black">PixelGuardAI</h3>
+</div>
+<span class="material-symbols-outlined text-4xl group-hover:text-black transition-transform group-hover:rotate-45">north_east</span>
+</a>
+<a href="https://github.com/4rch1t/SkyOptima" target="_blank" rel="noopener noreferrer"
+   class="reveal-up stagger-item project-row group relative flex justify-between items-center py-10 px-4 border-b border-white hover:bg-primary transition-colors duration-300 cursor-pointer"
+   data-preview-img="assets/images/skyoptima.png"
+   data-preview-name="SkyOptima"
+   data-preview-desc="Air traffic control simulator in Java — runway queuing, route management, and real-time collision avoidance logic."
+   data-preview-tags="Java,OOP,Simulation,Algorithms">
+<div class="flex items-baseline gap-8">
+<span class="font-headline text-2xl md:text-4xl font-bold text-white/30 group-hover:text-black">03</span>
+<h3 class="font-headline text-3xl md:text-6xl font-black uppercase tracking-tighter group-hover:text-black">SkyOptima</h3>
+</div>
+<span class="material-symbols-outlined text-4xl group-hover:text-black transition-transform group-hover:rotate-45">north_east</span>
+</a>
+<a href="https://github.com/4rch1t/Kanby" target="_blank" rel="noopener noreferrer"
+   class="reveal-up stagger-item project-row group relative flex justify-between items-center py-10 px-4 border-b border-white hover:bg-primary transition-colors duration-300 cursor-pointer"
+   data-preview-img="assets/images/kanby.png"
+   data-preview-name="Kanby"
+   data-preview-desc="Kanban task manager with drag-and-drop boards, multi-column workflows, and persistent card state."
+   data-preview-tags="React,Node.js,MongoDB,DnD">
+<div class="flex items-baseline gap-8">
+<span class="font-headline text-2xl md:text-4xl font-bold text-white/30 group-hover:text-black">04</span>
+<h3 class="font-headline text-3xl md:text-6xl font-black uppercase tracking-tighter group-hover:text-black">Kanby</h3>
+</div>
+<span class="material-symbols-outlined text-4xl group-hover:text-black transition-transform group-hover:rotate-45">north_east</span>
+</a>
+<a href="https://github.com/4rch1t/KhelYuva" target="_blank" rel="noopener noreferrer"
+   class="reveal-up stagger-item project-row group relative flex justify-between items-center py-10 px-4 border-b border-white hover:bg-primary transition-colors duration-300 cursor-pointer"
+   data-preview-img="assets/images/khelyuva.jpg"
+   data-preview-name="KhelYuva"
+   data-preview-desc="Sports platform for youth athletes — discover events, join clubs, and track performance across disciplines."
+   data-preview-tags="React,TypeScript,Node.js,MongoDB">
+<div class="flex items-baseline gap-8">
+<span class="font-headline text-2xl md:text-4xl font-bold text-white/30 group-hover:text-black">05</span>
+<h3 class="font-headline text-3xl md:text-6xl font-black uppercase tracking-tighter group-hover:text-black">KhelYuva</h3>
+</div>
+<span class="material-symbols-outlined text-4xl group-hover:text-black transition-transform group-hover:rotate-45">north_east</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Scrolling Marquee -->
+<div class="overflow-hidden border-t border-b border-white/10 bg-black select-none" aria-hidden="true">
+<div class="marquee-wrap py-4">
+<div class="flex w-max marquee-track items-center">
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">React</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">TypeScript</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">PyTorch</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">Node.js</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">Supabase</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">Deep Learning</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">MongoDB</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">Socket.io</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">Python</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">TailwindCSS</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">React</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">TypeScript</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">PyTorch</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">Node.js</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">Supabase</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">Deep Learning</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">MongoDB</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">Socket.io</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">Python</span><span class="text-primary/30 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-white/20 whitespace-nowrap px-8 tracking-widest">TailwindCSS</span><span class="text-primary/30 px-3">✦</span>
+</div>
+</div>
+<div class="marquee-wrap py-4 border-t border-white/5">
+<div class="flex w-max marquee-track-rev items-center">
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">Full-Stack</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">MERN</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">REST APIs</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">PostgreSQL</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">Docker</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">ResNet</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">ML Pipelines</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">Git</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">Grad-CAM</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">Comp. Prog</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">Full-Stack</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">MERN</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">REST APIs</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">PostgreSQL</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">Docker</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">ResNet</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">ML Pipelines</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">Git</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">Grad-CAM</span><span class="text-white/10 px-3">✦</span>
+<span class="font-headline font-black text-sm uppercase text-primary/20 whitespace-nowrap px-8 tracking-widest">Comp. Prog</span><span class="text-white/10 px-3">✦</span>
+</div>
+</div>
+</div>
+<!-- Expertise Section -->
+<section id="expertise" class="bg-black py-24 px-6 border-t border-white overflow-hidden">
+<div class="grid grid-cols-12 gap-6 mb-24">
+<div class="col-span-12 md:col-span-3">
+<span class="font-label uppercase tracking-[0.2rem] text-primary block reveal-up label-line">MY EXPERTISE</span>
+<span class="text-xs text-white/40 block mt-1 font-light reveal-up">専門知識</span>
+</div>
+<div class="col-span-12 md:col-span-9">
+<h2 class="font-headline text-4xl md:text-7xl font-black uppercase tracking-tighter leading-tight reveal-up">
+                    BUILDING FULL-STACK PRODUCTS <br/> POWERED BY REAL ML PIPELINES
+                </h2>
+</div>
+</div>
+<!-- Banner Image Section -->
+<div class="relative w-full h-[614px] bg-primary flex items-center justify-center overflow-hidden mb-24 reveal-scale">
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+<span class="text-[20rem] md:text-[40rem] font-black text-black/10 leading-none">人工知能</span>
+</div>
+<div class="relative z-10 w-full px-12 h-full flex flex-col justify-end pb-12">
+<div class="flex justify-between items-end w-full">
+<span class="font-headline font-black text-3xl md:text-6xl text-black">// 01</span>
+<h3 class="text-huge font-headline font-black uppercase tracking-tighter text-black truncate translate-y-1/4">CREATE</h3>
+</div>
+</div>
+<img class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-multiply" alt="Archit Kumar Sahoo" src="assets/images/profile.png"/>
+</div>
+<!-- Skills Detail Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 border-t border-white">
+<!-- Column 01 -->
+<div class="p-8 md:p-12 border-b md:border-b-0 md:border-r border-white reveal-left">
+<div class="flex justify-between items-start mb-16">
+<span class="font-headline text-8xl md:text-[12rem] font-black text-white leading-none reveal-up count-target" data-count="1">01</span>
+<div class="text-right reveal-up">
+<span class="font-label uppercase tracking-widest text-primary text-sm font-bold block">INTELLIGENCE</span>
+<span class="text-[10px] text-white/40 uppercase block">領域 01</span>
+</div>
+</div>
+<ul class="space-y-6">
+<li class="flex justify-between items-center border-b border-white/20 pb-4 reveal-up stagger-item">
+<span class="font-headline text-2xl uppercase tracking-tighter">PyTorch &amp; Deep Learning</span>
+<span class="text-primary text-xs">ADVANCED</span>
+</li>
+<li class="flex justify-between items-center border-b border-white/20 pb-4 reveal-up stagger-item">
+<span class="font-headline text-2xl uppercase tracking-tighter">ResNet / Grad-CAM Models</span>
+<span class="text-primary text-xs">APPLIED</span>
+</li>
+<li class="flex justify-between items-center border-b border-white/20 pb-4 reveal-up stagger-item">
+<span class="font-headline text-2xl uppercase tracking-tighter">Prompt Engineering</span>
+<span class="text-primary text-xs">SPECIALIST</span>
+</li>
+<li class="flex justify-between items-center border-b border-white/20 pb-4 reveal-up stagger-item">
+<span class="font-headline text-2xl uppercase tracking-tighter">TensorFlow &amp; ML Pipelines</span>
+<span class="text-primary text-xs">CORE</span>
+</li>
+<li class="flex justify-between items-center border-b border-white/20 pb-4 reveal-up stagger-item">
+<span class="font-headline text-2xl uppercase tracking-tighter">PCA / KNN / EM Algorithm</span>
+<span class="text-primary text-xs">ACADEMIC</span>
+</li>
+</ul>
+</div>
+<!-- Column 02 -->
+<div class="p-8 md:p-12 reveal-right">
+<div class="flex justify-between items-start mb-16">
+<span class="font-headline text-8xl md:text-[12rem] font-black text-white leading-none reveal-up count-target" data-count="2">02</span>
+<div class="text-right reveal-up">
+<span class="font-label uppercase tracking-widest text-primary text-sm font-bold block">ARCHITECTURE</span>
+<span class="text-[10px] text-white/40 uppercase block">領域 02</span>
+</div>
+</div>
+<ul class="space-y-6">
+<li class="flex justify-between items-center border-b border-white/20 pb-4 reveal-up stagger-item">
+<span class="font-headline text-2xl uppercase tracking-tighter">MERN Stack Development</span>
+<span class="text-primary text-xs">FULL-CYCLE</span>
+</li>
+<li class="flex justify-between items-center border-b border-white/20 pb-4 reveal-up stagger-item">
+<span class="font-headline text-2xl uppercase tracking-tighter">TypeScript &amp; REST APIs</span>
+<span class="text-primary text-xs">PRODUCTION</span>
+</li>
+<li class="flex justify-between items-center border-b border-white/20 pb-4 reveal-up stagger-item">
+<span class="font-headline text-2xl uppercase tracking-tighter">Socket.io Real-time Systems</span>
+<span class="text-primary text-xs">SHIPPED</span>
+</li>
+<li class="flex justify-between items-center border-b border-white/20 pb-4 reveal-up stagger-item">
+<span class="font-headline text-2xl uppercase tracking-tighter">PostgreSQL &amp; Supabase</span>
+<span class="text-primary text-xs">OPERATIONAL</span>
+</li>
+<li class="flex justify-between items-center border-b border-white/20 pb-4 reveal-up stagger-item">
+<span class="font-headline text-2xl uppercase tracking-tighter">Git, Docker &amp; DevOps</span>
+<span class="text-primary text-xs">GROWING</span>
+</li>
+<li class="flex justify-between items-center border-b border-white/20 pb-4 reveal-up stagger-item">
+<span class="font-headline text-2xl uppercase tracking-tighter">Competitive Programming</span>
+<span class="text-primary text-xs">ACTIVE</span>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section id="cta" class="py-40 px-6 bg-primary flex flex-col items-center justify-center text-center overflow-hidden">
+<h2 class="font-headline text-6xl md:text-9xl font-black uppercase tracking-tighter text-black leading-none mb-12 reveal-up">
+            GOT AN IDEA? <br/> LET'S BUILD IT.
+        </h2>
+<div class="reveal-up flex flex-col sm:flex-row items-center gap-6" style="transition-delay: 0.3s;">
+<a href="https://www.linkedin.com/in/architkumarsahoo/" target="_blank" rel="noopener noreferrer" class="bg-black text-primary px-12 py-6 font-headline font-bold text-2xl md:text-4xl uppercase tracking-tighter hover:bg-white hover:text-black transition-all active:scale-95 inline-block magnetic-btn">
+                START A CONVERSATION
+            </a>
+<a href="https://docs.google.com/document/d/1yPMkUqWV3E_n2MWBGIyLXzIOH1-I08QqRmTcA7d3G6c/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="border-2 border-black text-black px-12 py-6 font-headline font-bold text-2xl md:text-4xl uppercase tracking-tighter hover:bg-black hover:text-primary transition-all active:scale-95 inline-flex items-center gap-3 magnetic-btn">
+                <span class="material-symbols-outlined text-3xl">description</span>
+                RESUME
+            </a>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-6 flex flex-col items-center gap-8 bg-black border-t border-white text-center">
+<div class="text-[#FF3D00] font-black text-lg font-['Space_Grotesk'] uppercase tracking-tighter">ARCHIT</div>
+<div class="flex gap-8">
+<a class="font-['Inter'] uppercase tracking-[0.15rem] text-[10px] text-white hover:text-[#FF3D00] underline decoration-1 underline-offset-4 transition-all duration-300 ease-in-out" href="https://www.linkedin.com/in/architkumarsahoo/" target="_blank" rel="noopener noreferrer">LINKEDIN</a>
+<a class="font-['Inter'] uppercase tracking-[0.15rem] text-[10px] text-white hover:text-[#FF3D00] underline decoration-1 underline-offset-4 transition-all duration-300 ease-in-out" href="https://github.com/4rch1t" target="_blank" rel="noopener noreferrer">GITHUB</a>
+<a class="font-['Inter'] uppercase tracking-[0.15rem] text-[10px] text-white hover:text-[#FF3D00] underline decoration-1 underline-offset-4 transition-all duration-300 ease-in-out" href="https://leetcode.com/u/4rch1tlmao/" target="_blank" rel="noopener noreferrer">LEETCODE</a>
+<a class="font-['Inter'] uppercase tracking-[0.15rem] text-[10px] text-white hover:text-[#FF3D00] underline decoration-1 underline-offset-4 transition-all duration-300 ease-in-out" href="https://codeforces.com/profile/4rch1t" target="_blank" rel="noopener noreferrer">CODEFORCES</a>
+</div>
+<div class="font-['Inter'] uppercase tracking-[0.15rem] text-[10px] text-white/50">© 2026 ARCHIT KUMAR SAHOO — ALL RIGHTS RESERVED</div>
+</footer>
+
+<!-- Back to Top -->
+<div class="back-to-top" id="back-to-top">
+<span class="material-symbols-outlined">arrow_upward</span>
+</div>
+
+<script>
+    // ===== Intersection Observer for Scroll Reveals =====
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px 0px -50px 0px',
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal-up, .reveal-scale, .reveal-left, .reveal-right, .reveal-float').forEach(el => {
+        observer.observe(el);
+    });
+
+    // ===== Parallax Effect for Hero =====
+    const heroTitle = document.getElementById('hero-title');
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                const scrolled = window.pageYOffset;
+
+                // Hero parallax
+                if (heroTitle && scrolled < window.innerHeight) {
+                    heroTitle.style.transform = `translateY(${scrolled * 0.15}px)`;
+                }
+
+                // Header shrink
+                const header = document.getElementById('site-header');
+                if (header) {
+                    header.classList.toggle('scrolled', scrolled > 80);
+                }
+
+                // Back to top visibility
+                const backToTop = document.getElementById('back-to-top');
+                if (backToTop) {
+                    backToTop.classList.toggle('visible', scrolled > 600);
+                }
+
+                // Active nav link highlighting
+                updateActiveNav();
+
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    // ===== Active Nav Link Highlighting =====
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    function updateActiveNav() {
+        const scrollPos = window.scrollY + 150;
+
+        sections.forEach(section => {
+            const top = section.offsetTop;
+            const height = section.offsetHeight;
+            const id = section.getAttribute('id');
+
+            if (scrollPos >= top && scrollPos < top + height) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active-link');
+                    if (link.getAttribute('href') === '#' + id) {
+                        link.classList.add('active-link');
+                    }
+                });
+            }
+        });
+    }
+
+    // ===== Mobile Menu Toggle =====
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuOpen = document.getElementById('menu-open');
+    const menuClose = document.getElementById('menu-close');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+    if (menuOpen && mobileMenu) {
+        menuOpen.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+    }
+
+    function closeMobileMenu() {
+        if (mobileMenu) {
+            mobileMenu.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+    }
+
+    if (menuClose) menuClose.addEventListener('click', closeMobileMenu);
+    mobileNavLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
+
+    // ===== Back to Top =====
+    const backToTopBtn = document.getElementById('back-to-top');
+    if (backToTopBtn) {
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // ===== Magnetic Button Effect =====
+    document.querySelectorAll('.magnetic-btn').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+        });
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = 'translate(0, 0)';
+        });
+    });
+
+    // ===== Floating Project Preview =====
+    (function () {
+        const card  = document.getElementById('project-preview');
+        const pImg  = document.getElementById('preview-img');
+        const pName = document.getElementById('preview-name');
+        const pDesc = document.getElementById('preview-desc');
+        const pTags = document.getElementById('preview-tags');
+        if (!card) return;
+
+        const CARD_W = 300;
+        const OFFSET_X = 24;
+        const OFFSET_Y = -60;
+
+        let mouseX = 0, mouseY = 0;
+        let cardX = 0, cardY = 0;
+        let visible = false;
+        let raf;
+
+        function clamp(val, min, max) { return Math.min(Math.max(val, min), max); }
+
+        function tick() {
+            cardX += (mouseX - cardX) * 0.14;
+            cardY += (mouseY - cardY) * 0.14;
+            const maxX = window.innerWidth - CARD_W - 16;
+            const maxY = window.innerHeight - card.offsetHeight - 16;
+            card.style.transform = `translate(${clamp(cardX, 16, maxX)}px, ${clamp(cardY, 16, maxY)}px) translateY(0)`;
+            if (visible) raf = requestAnimationFrame(tick);
+        }
+
+        document.querySelectorAll('[data-preview-img]').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                pImg.src  = row.dataset.previewImg;
+                pImg.alt  = row.dataset.previewName;
+                pName.textContent = row.dataset.previewName;
+                pDesc.textContent = row.dataset.previewDesc;
+                pTags.innerHTML = row.dataset.previewTags
+                    .split(',')
+                    .map(t => `<span class="preview-tag">${t.trim()}</span>`)
+                    .join('');
+                card.classList.add('visible');
+                visible = true;
+                cancelAnimationFrame(raf);
+                raf = requestAnimationFrame(tick);
+            });
+
+            row.addEventListener('mousemove', e => {
+                mouseX = e.clientX + OFFSET_X;
+                mouseY = e.clientY + OFFSET_Y;
+            });
+
+            row.addEventListener('mouseleave', () => {
+                card.classList.remove('visible');
+                visible = false;
+                cancelAnimationFrame(raf);
+            });
+        });
+    })();
+
+    // ===== Smooth Reveal on DOMContentLoaded =====
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.animate-hero').forEach(el => el.classList.add('active'));
+
+        // Word-by-word reveal for section H2 headings
+        document.querySelectorAll('section h2.font-headline').forEach(h2 => {
+            const parts = h2.innerHTML.split(/(<br\s*\/?>)/gi);
+            h2.innerHTML = '';
+            let delay = 0;
+            parts.forEach(part => {
+                if (/<br/i.test(part)) { h2.appendChild(document.createElement('br')); return; }
+                part.trim().split(/\s+/).forEach(word => {
+                    if (!word) return;
+                    const box = document.createElement('span');
+                    box.className = 'word-box';
+                    const inner = document.createElement('span');
+                    inner.className = 'word-inner';
+                    inner.style.transitionDelay = delay + 's';
+                    inner.textContent = word;
+                    delay += 0.07;
+                    box.appendChild(inner);
+                    h2.appendChild(box);
+                    h2.appendChild(document.createTextNode(' '));
+                });
+            });
+            h2.classList.add('split-ready');
+        });
+    });
+
+    // ===== Scroll Progress Bar =====
+    (function() {
+        const bar = document.getElementById('scroll-progress');
+        if (!bar) return;
+        window.addEventListener('scroll', () => {
+            bar.style.width = (window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight) * 100) + '%';
+        }, { passive: true });
+    })();
+
+    // ===== Custom Cursor — Sharp Brutalist =====
+    (function() {
+        const canvas = document.getElementById('cursor-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let W, H;
+        function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+        resize();
+        window.addEventListener('resize', resize, { passive: true });
+
+        const RED = '#FF3D00';
+        const RED_A = (a) => `rgba(255,61,0,${a})`;
+
+        let mx = W / 2, my = H / 2;
+        let bx = mx, by = my;          // lagged box position
+        let targetS = 28, curS = 28;   // box half-size
+        let ripples = [];
+        let trail = [];
+        let isHovering = false;
+        let cursorVisible = false;
+
+        window.addEventListener('mousemove', e => {
+            mx = e.clientX; my = e.clientY;
+            cursorVisible = true;
+            trail.unshift({ x: mx, y: my });
+            if (trail.length > 16) trail.pop();
+        }, { passive: true });
+
+        window.addEventListener('click', e => {
+            ripples.push({ x: e.clientX, y: e.clientY, age: 0 });
+        });
+
+        document.querySelectorAll('a, button, .project-row').forEach(el => {
+            el.addEventListener('mouseenter', () => { targetS = 44; isHovering = true; });
+            el.addEventListener('mouseleave', () => { targetS = 28; isHovering = false; });
+        });
+
+        document.body.style.cursor = 'none';
+
+        // Draw a corner-bracket at (cx, cy) with half-size s, arm length L
+        function drawBrackets(cx, cy, s, L, alpha) {
+            const corners = [
+                [-s, -s,  L,  0,  0,  L],
+                [ s, -s, -L,  0,  0,  L],
+                [-s,  s,  L,  0,  0, -L],
+                [ s,  s, -L,  0,  0, -L],
+            ];
+            ctx.strokeStyle = RED_A(alpha);
+            ctx.lineWidth = 1.5;
+            corners.forEach(([ox, oy, dx1, dy1, dx2, dy2]) => {
+                ctx.beginPath();
+                ctx.moveTo(cx + ox + dx1, cy + oy + dy1);
+                ctx.lineTo(cx + ox, cy + oy);
+                ctx.lineTo(cx + ox + dx2, cy + oy + dy2);
+                ctx.stroke();
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+            if (!cursorVisible) { requestAnimationFrame(draw); return; }
+
+            // Ease lagged box
+            bx += (mx - bx) * 0.10;
+            by += (my - by) * 0.10;
+            curS += (targetS - curS) * 0.12;
+
+            // --- Sharp trail: connected line segments ---
+            if (trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(trail[0].x, trail[0].y);
+                for (let i = 1; i < trail.length; i++) ctx.lineTo(trail[i].x, trail[i].y);
+                ctx.strokeStyle = RED_A(0.22);
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+
+            // --- Lagged outer square outline ---
+            const s = curS;
+            ctx.strokeStyle = isHovering ? RED_A(0.9) : RED_A(0.5);
+            ctx.lineWidth = 1;
+            ctx.strokeRect(bx - s, by - s, s * 2, s * 2);
+
+            // --- Corner brackets on outer square ---
+            drawBrackets(bx, by, s, 7, isHovering ? 1 : 0.7);
+
+            // --- Crosshair lines inside box (exact cursor pos) ---
+            const cLen = 6;
+            ctx.strokeStyle = RED_A(0.4);
+            ctx.lineWidth = 1;
+            // horizontal
+            ctx.beginPath();
+            ctx.moveTo(mx - s + 2, my);
+            ctx.lineTo(mx - cLen, my);
+            ctx.moveTo(mx + cLen, my);
+            ctx.lineTo(mx + s - 2, my);
+            // vertical
+            ctx.moveTo(mx, my - s + 2);
+            ctx.lineTo(mx, my - cLen);
+            ctx.moveTo(mx, my + cLen);
+            ctx.lineTo(mx, my + s - 2);
+            ctx.stroke();
+
+            // --- Core dot — sharp 3×3 square ---
+            ctx.fillStyle = RED;
+            ctx.fillRect(mx - 2, my - 2, 4, 4);
+
+            // --- Click ripples: expanding squares ---
+            ripples = ripples.filter(r => r.age < 1);
+            ripples.forEach(r => {
+                r.age += 0.025;
+                const hs = r.age * 55;
+                const alpha = (1 - r.age) * 0.8;
+                ctx.strokeStyle = RED_A(alpha);
+                ctx.lineWidth = 1.5 * (1 - r.age) + 0.5;
+                ctx.strokeRect(r.x - hs, r.y - hs, hs * 2, hs * 2);
+                // Inner square
+                const hs2 = hs * 0.5;
+                ctx.strokeStyle = RED_A(alpha * 0.4);
+                ctx.lineWidth = 1;
+                ctx.strokeRect(r.x - hs2, r.y - hs2, hs2 * 2, hs2 * 2);
+            });
+
+            requestAnimationFrame(draw);
+        }
+
+        requestAnimationFrame(draw);
+    })();
+
+    // ===== Count-up for expertise big numbers =====
+    (function() {
+        const ob = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (!e.isIntersecting || e.target.dataset.done) return;
+                e.target.dataset.done = '1';
+                const target = parseInt(e.target.dataset.count);
+                const t0 = performance.now();
+                (function tick(now) {
+                    const p = Math.min((now - t0) / 1200, 1);
+                    e.target.textContent = Math.floor((1 - Math.pow(1 - p, 3)) * target).toString().padStart(2, '0');
+                    if (p < 1) requestAnimationFrame(tick);
+                })(performance.now());
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('[data-count]').forEach(el => ob.observe(el));
+    })();
+
+    // ===== Label line-draw observer =====
+    (function() {
+        const ob = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+        }, { threshold: 0.2 });
+        document.querySelectorAll('.label-line').forEach(el => ob.observe(el));
+    })();
+</script>
+</body></html>
